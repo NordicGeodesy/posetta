@@ -1,0 +1,31 @@
+[build-system]
+requires = ["flit"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+module             = "posetta"
+author             = "Nordic Geodetic Commision"
+author-email       = "geir.arne.hjelle@kartverket.no"
+home-page          = "https://github.com/NordicGeodesy/posetta"
+description-file   = "README.md"
+classifiers        = ["Development Status :: 2 - Pre-Alpha",
+                      "Intended Audience :: Science/Research",
+                      "License :: OSI Approved :: MIT License",
+                      "Natural Language :: English",
+                      "Operating System :: MacOS",
+                      "Operating System :: Microsoft",
+                      "Operating System :: POSIX :: Linux",
+                      "Programming Language :: Python :: 3",
+                      "Topic :: Scientific/Engineering",
+                     ]
+keywords           = "geodesy coordinate point position velocity format converter translator"
+
+# Requirements
+requires-python    = ">=3.6"
+requires           = ["click", "numpy", ]
+dev-requires       = ["black", "bumpversion", "flit", ]
+
+
+[tool.flit.scripts]
+posetta = "posetta.__main__:cli"
+posetta_gui = "posetta:gui"
