@@ -22,14 +22,17 @@ To use a writer, call it using the `write`-function defined below:
 The name used in `write` to call the writer is the name of the module (file)
 containing the writer.
 """
+
+# Standard library imports
 import pathlib
-from typing import List, Union
+from typing import List, Sequence, Tuple, Union
 
-from posetta.lib import plugins
+# Posetta imports
 from posetta.data import CoordSet
+from posetta.lib import plugins
 
 
-def names() -> List[str]:
+def names() -> Tuple[str, ...]:
     """List the names of available writers
 
     Note that this will import all writers.
@@ -50,6 +53,23 @@ def exists(writer_name: str) -> bool:
         True if writer exists, False otherwise.
     """
     return plugins.exists(package_name=__name__, plugin_name=writer_name)
+
+
+def short_docs(*readers: str) -> List[Tuple[str, str]]:
+    """Get one line documentation for readers
+
+    If no readers are specified, documentation for all available readers are returned.
+
+    Args:
+        readers:  Names of readers.
+
+    Returns:
+        Names and documentation for readers.
+    """
+    if not readers:
+        readers = names()
+
+    return [(r, plugins.doc(__name__, r, long_doc=False)) for r in readers]
 
 
 def write(

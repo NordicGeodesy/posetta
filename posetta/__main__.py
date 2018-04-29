@@ -2,20 +2,40 @@
 """Posetta, The Universal Translator of Geodetic Coordinate File Formats
 
 Posetta can convert an input file in one format to an output file with a
-different format. A typical example of its use is
+different format.
 
-$ posetta file_1.txt -f xyz file_2.gri -t gri
+\b
+Examples:
+---------
 
-This will convert file_1.txt in XYZ-format to file_2.gri in GRI-format.
+Convert file_1.txt in XYZ-format to file_2.gri in GRI-format:
 
-Available input formats are:
+  $ posetta file_1.txt -f xyz file_2.gri -t gri
 
-  {readers_names}
+\b
+Input Formats:
+--------------
 
-Available output formats are:
+\b
+{readers}
 
-  {writers_names}
+\b
+Output formats:
+---------------
 
+\b
+{writers}
+
+\b
+About Posetta:
+--------------
+
+Posetta is currently maintained by:
+
+\b
+{authors}
+
+Contributions are welcome at {url}.
 """
 
 # Standard library imports
@@ -26,6 +46,7 @@ from typing import Optional, Union
 import click
 
 # Posetta imports
+import posetta
 from posetta import readers
 from posetta import writers
 
@@ -33,9 +54,17 @@ from posetta import writers
 def help_str():
     """Add information to the module doc-string for a complete help message
     """
+    authors = [
+        f"  + {name} <{email}>"
+        for name, email in zip(
+            posetta.__author__.split(", "), posetta.__contact__.split(", ")
+        )
+    ]
     return __doc__.format(
-        readers_names=", ".join(readers.names()),
-        writers_names=", ".join(writers.names()),
+        readers="\n".join(f"  + {name} - {doc}" for name, doc in readers.short_docs()),
+        writers="\n".join(f"  + {name} - {doc}" for name, doc in writers.short_docs()),
+        authors="\n".join(authors),
+        url=posetta.__url__,
     )
 
 
@@ -123,7 +152,7 @@ def translate(
 
     # Do the translation
     verbose(f"Reading from '{path_from}'")
-    cset = readers.read(path_from, fmt_from)
+    cset = readers.read(path_from, fmt_from).as_coordset()
 
     verbose(f"Writing to '{path_to}'")
     writers.write(path_to, fmt_to, cset)

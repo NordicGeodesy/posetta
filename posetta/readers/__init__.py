@@ -22,15 +22,18 @@ To use a reader, call it using the `read`-function defined below:
 The name used in `read` to call the reader is the name of the module (file)
 containing the reader.
 """
-import pathlib
-from typing import List, Union
 
+# Standard library imports
+import pathlib
+from typing import List, Tuple, Union
+
+# Posetta imports
+from posetta.readers._reader import Reader
 from posetta.lib import exceptions
 from posetta.lib import plugins
-from posetta.data import CoordSet
 
 
-def names() -> List[str]:
+def names() -> Tuple[str, ...]:
     """List the names of available readers
 
     Note that this will import all readers.
@@ -53,7 +56,24 @@ def exists(reader_name: str) -> bool:
     return plugins.exists(package_name=__name__, plugin_name=reader_name)
 
 
-def read(file_path: Union[str, pathlib.Path], reader_name: str = None) -> CoordSet:
+def short_docs(*readers: str) -> List[Tuple[str, str]]:
+    """Get one line documentation for readers
+
+    If no readers are specified, documentation for all available readers are returned.
+
+    Args:
+        readers:  Names of readers.
+
+    Returns:
+        Names and documentation for readers.
+    """
+    if not readers:
+        readers = names()
+
+    return [(r, plugins.doc(__name__, r, long_doc=False)) for r in readers]
+
+
+def read(file_path: Union[str, pathlib.Path], reader_name: str = None) -> Reader:
     """Read a file with a given reader
 
     If the reader is not specified, an attempt to guess at an appropriate reader is
@@ -69,9 +89,11 @@ def read(file_path: Union[str, pathlib.Path], reader_name: str = None) -> CoordS
     if reader_name is None:
         reader_name = identify(file_path)
 
-    return plugins.call(
+    reader = plugins.call(
         package_name=__name__, plugin_name=reader_name, file_path=file_path
     )
+    reader.read()
+    return reader
 
 
 def identify(file_path: Union[str, pathlib.Path]) -> str:
