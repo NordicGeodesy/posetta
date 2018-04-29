@@ -25,4 +25,4 @@ class XyzReader(LineReader):
     """
 
     def setup_reader(self):
-        return dict(names=['epochs', 'postions', 'velocities'])
+        return dict(names=["epochs", "postions", "velocities"])

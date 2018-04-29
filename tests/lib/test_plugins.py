@@ -1,0 +1,59 @@
+"""Tests for the lib.plugins-module
+
+"""
+
+# Third party imports
+import pytest
+
+# Posetta imports
+from posetta.lib import exceptions
+from posetta.lib import plugins
+from posetta.readers._reader import Reader
+
+
+def test_package_not_empty():
+    """Test that list_all() finds some plugins in posetta.readers-package"""
+    readers = plugins.list_all("posetta.readers")
+    assert len(readers) > 0
+
+
+def test_package_empty():
+    """Test that list_all() does not find any plugins in posetta.lib-package"""
+    lib_plugins = plugins.list_all("posetta.lib")
+    assert len(lib_plugins) == 0
+
+
+def test_package_non_existing():
+    """Test that a non-existent package raises an appropriate error"""
+    with pytest.raises(exceptions.UnknownPackageError):
+        plugins.list_all("posetta.non_existent")
+
+
+def test_plugin_exists():
+    """Test that an existing plugin returns True for exists()"""
+    package_name = "posetta.readers"
+    plugin_name = plugins.list_all(package_name)[0]
+    assert plugins.exists(package_name, plugin_name)
+
+
+@pytest.mark.parametrize("plugin_name", ["exceptions", "non_existent"])
+def test_plugin_exists_not(plugin_name):
+    """Test that a non-existing plugin returns False for exists()
+
+    Tests both for an existing module (posetta.lib.exceptions) and a non-existent module
+    (posetta.lib.non_existent).
+    """
+    assert not plugins.exists("posetta.lib", plugin_name)
+
+
+def test_call_existing_plugin():
+    """Test that calling a reader-plugin returns a Reader instance"""
+    package_name = "posetta.readers"
+    plugin_name = plugins.list_all(package_name)[0]
+    reader = plugins.call(package_name, plugin_name, file_path="test")
+    assert isinstance(reader, Reader)
+
+
+def test_call_non_exising_plugin():
+    with pytest.raises(exceptions.UnknownPluginError):
+        plugins.call("posetta.lib", "non_existent")

@@ -9,3 +9,5 @@ dependencies:
   - mypy
   - numpy
   - pandas
+  - pytest
+  - pytest-cov
