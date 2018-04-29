@@ -22,8 +22,8 @@ keywords           = "geodesy coordinate point position velocity format converte
 
 # Requirements
 requires-python    = ">=3.6"
-requires           = ["click", "numpy", ]
-dev-requires       = ["black", "bumpversion", "flit", ]
+requires           = ["click", "numpy", "pandas"]
+dev-requires       = ["black", "bumpversion", "flit", "mypy"]
 
 
 [tool.flit.scripts]

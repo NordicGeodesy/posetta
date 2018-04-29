@@ -6,5 +6,6 @@ dependencies:
   - click
   - flit
   - ipython
+  - mypy
   - numpy
-
+  - pandas
