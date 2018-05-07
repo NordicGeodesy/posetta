@@ -33,14 +33,14 @@ About Posetta:
 Posetta is currently maintained by:
 
 \b
-{authors}
+{maintainers}
 
 Contributions are welcome at {url}.
 """
 
 # Standard library imports
 import pathlib
-from typing import Optional, Union
+from typing import Any, Dict, Optional, Union
 
 # Third party imports
 import click
@@ -54,7 +54,7 @@ from posetta import writers
 def help_str():
     """Add information to the module doc-string for a complete help message
     """
-    authors = [
+    maintainers = [
         f"  + {name} <{email}>"
         for name, email in zip(
             posetta.__author__.split(", "), posetta.__contact__.split(", ")
@@ -63,7 +63,7 @@ def help_str():
     return __doc__.format(
         readers="\n".join(f"  + {name} - {doc}" for name, doc in readers.short_docs()),
         writers="\n".join(f"  + {name} - {doc}" for name, doc in writers.short_docs()),
-        authors="\n".join(authors),
+        maintainers="\n".join(maintainers),
         url=posetta.__url__,
     )
 
@@ -87,7 +87,7 @@ def help_str():
 @click.version_option(None, "-v", "--version")
 @click.help_option("-h", "--help")
 def cli(
-    file_from: str, file_to: str, fmt_from: str, fmt_to: str, **options: dict
+    file_from: str, file_to: str, fmt_from: str, fmt_to: str, **options: Dict[str, Any]
 ) -> None:
     """The command line interface for Posetta
 
@@ -111,7 +111,7 @@ def translate(
     file_to: Union[str, pathlib.Path],
     fmt_from: str,
     fmt_to: str,
-    options: Optional[dict] = None,
+    options: Optional[Dict[str, Any]] = None,
 ) -> None:
     """The main workflow of Posetta
 
@@ -125,6 +125,7 @@ def translate(
         fmt_to:     Format of output file.
         options:    Additional options.
     """
+    options = options or dict()
     verbose = _verbose_on if options.get("verbose") else _verbose_off
     path_from = pathlib.Path(file_from)
     path_to = pathlib.Path(file_to)
