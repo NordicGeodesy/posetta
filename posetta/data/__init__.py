@@ -5,8 +5,4 @@ between different coordinate data formats.
 
 """
 
-from collections import namedtuple
-
-
-# Temporary definition of CoordSet
-CoordSet = namedtuple("CoordSet", ["epochs", "positions", "velocities"])
+from posetta.data.coordset import CoordSet  # noqa
