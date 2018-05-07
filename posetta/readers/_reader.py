@@ -51,7 +51,7 @@ class Reader:
         """
         pass
 
-    def read(self) -> "Reader":
+    def read(self) -> None:
         """Read data
 
         This is a basic implementation that carries out the whole pipeline of reading
@@ -61,7 +61,6 @@ class Reader:
         """
         self.setup_reader()
         self.read_data()
-        return self
 
     def read_data(self) -> None:
         """Read data from the data file
@@ -70,7 +69,7 @@ class Reader:
         `self.data`. A description of the data may be placed in the dictionary
         `self.meta`. If the file is not found, a FileNotFoundError should be raised.
         """
-        raise NotImplementedError
+        raise NotImplementedError(f"{self.reader_name} must implement read_data()")
 
     def as_dict(self, include_meta: bool = False) -> Dict[str, Any]:
         """Return the data as a dictionary
@@ -110,4 +109,9 @@ class Reader:
         Returns:
             The data that has been read as a coordinate dataset.
         """
-        return data.CoordSet(1, 2, 3)
+        return data.CoordSet()
+
+    def __repr__(self) -> str:
+        """A simple string representation of the reader
+        """
+        return f"{self.__class__.__name__}('{self.file_path}')"

@@ -136,7 +136,6 @@ def doc(
 
     Returns:
         Documentation of the plug-in.
-
     """
     # Get Plugin-object and pick out doc-string
     doc = load(package_name, plugin_name).doc
@@ -148,7 +147,7 @@ def doc(
         # Stop before Args:, Returns: etc if details should not be included
         idx_args = len(lines)
         if not include_details:
-            re_args = re.compile("(Args:|Returns:|Details:|Examples?:|Attributes:)$")
+            re_args = re.compile("(Args:|Returns:|Details:|Attributes:)$")
             try:
                 idx_args = [re_args.match(l) is not None for l in lines].index(True)
             except ValueError:

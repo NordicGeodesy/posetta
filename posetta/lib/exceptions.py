@@ -12,7 +12,15 @@ class PosettaException(Exception):
     pass
 
 
+class CoordSetError(PosettaException):
+    pass
+
+
 class NoReaderFound(PosettaException):
+    pass
+
+
+class ReaderError(PosettaException):
     pass
 
 
