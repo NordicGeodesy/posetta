@@ -82,6 +82,7 @@ def write(
         writer_name:  Name of writer that should be used.
         cset:         Data that should be written as a coordinate dataset.
     """
-    return plugins.call(
+    writer = plugins.call(
         package_name=__name__, plugin_name=writer_name, file_path=file_path, cset=cset
     )
+    writer.write()
