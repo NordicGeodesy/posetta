@@ -28,4 +28,4 @@ dev-requires       = ["black", "bumpversion", "flit", "mypy", "pytest", "pytest-
 
 [tool.flit.scripts]
 posetta = "posetta.__main__:cli"
-posetta_gui = "posetta:gui"
+posetta_gui = "posetta.__main__:gui"
