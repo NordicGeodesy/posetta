@@ -56,6 +56,16 @@ class CoordSet:
         self, table_name: str, idx: Optional[int], val: np.ndarray, column_name: str
     ) -> None:
         """Add one column of values to the CoordSet
+
+        Possible tables are:
+
+            epochs(1), positions(3), (3)velocities(3) and values(None).
+
+        where the number of available columns is listed in the parentheses.
+
+        When adding a column the idx parameter must be between 0 and the above mentioned
+        number of colums. If adding a 'value' the index should be set to None, which
+        creates a generic table that can hold any number of data columns.
         """
         # Check that number of observations are consistent
         val_num_obs = len(val)
@@ -111,6 +121,9 @@ class Table:
         """Add one column of values to the Table
         """
         val_num_obs = len(val)
+
+        if type(val) is not np.ndarray:
+            val = np.asarray(val)
 
         # Create new array to hold values if necessary
         if self.values is None:
