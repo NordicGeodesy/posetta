@@ -38,7 +38,7 @@ from posetta.writers._writer import Writer
 
 @plugins.register
 class CsvWriter(Writer):
-    """A reader for xyz-files
+    """A writer for csv-files
     """
 
     def write_data(self) -> None:
