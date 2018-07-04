@@ -134,10 +134,13 @@ class Table:
             if self._is_expandable:
                 idx = self.values.shape[1] or 0
                 self.values = np.concatenate((self.values, val[:, None]), axis=1)
+                self.col_names.append(name)
+                self.num_cols += 1
             else:
                 raise ValueError(f"Table is not expandable, specify 'idx'")
         else:
             self.values[:, idx] = val
+            self.col_names[idx] = name
 
         return idx
 
