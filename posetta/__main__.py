@@ -30,7 +30,9 @@ Output formats:
 About Posetta:
 --------------
 
-Posetta is currently maintained by:
+Posetta, v{version}, MIT License {copyright}
+
+Currently maintained by:
 
 \b
 {maintainers}
@@ -65,6 +67,8 @@ def help_str():
         writers="\n".join(f"  + {name} - {doc}" for name, doc in writers.short_docs()),
         maintainers="\n".join(maintainers),
         url=posetta.__url__,
+        copyright=posetta.__copyright__,
+        version=posetta.__version__,
     )
 
 

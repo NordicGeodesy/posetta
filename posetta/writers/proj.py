@@ -1,17 +1,21 @@
-"""Write files that are readable by PROJ
+"""Simple format readable by PROJ
 
 Description:
 ------------
+
 PROJ reads files on a line by line basis. Each line contains a coordinate
 and possibly a comment. A coordinate is made up of two to four numbers,
 usually ordered as x, y, z, t, but this isn't a requirement. Anything
 after a # is considered a comment by PROJ. We use that fact to add
 extraneous data such as velocities and other generic values.
+
 """
 
 # Posetta imports
+from posetta.lib import exceptions
 from posetta.lib import plugins
 from posetta.writers._writer import Writer
+
 
 @plugins.register
 class ProjWriter(Writer):
@@ -29,8 +33,8 @@ class ProjWriter(Writer):
             if column in ("easting", "northing"):
                 required_columns[column] = True
 
-        if not (all(value == True for value in required_columns.values())):
-            raise WriterError(
+        if not (all(value is True for value in required_columns.values())):
+            raise exceptions.WriterError(
                 "Input dataset should at least contain eating and northing columns"
             )
 
