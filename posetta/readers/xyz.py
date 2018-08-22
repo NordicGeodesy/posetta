@@ -65,5 +65,5 @@ class XyzReader(LineReader):
         cset = data.CoordSet()
         for column, value in self.data.items():
             table, idx = self._headers.get(column.lower(), ("values", None))
-            cset.add(table, idx, val=value, column_name=column)
+            cset.add(table, val=value, idx=idx, column_name=column)
         return cset

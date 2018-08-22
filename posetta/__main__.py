@@ -53,7 +53,7 @@ from posetta import readers
 from posetta import writers
 
 
-def help_str():
+def help_str() -> str:
     """Add information to the module doc-string for a complete help message
     """
     maintainers = [

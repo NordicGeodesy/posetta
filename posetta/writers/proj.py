@@ -50,7 +50,7 @@ class ProjWriter(Writer):
                     )
 
                 # write epochs if they are present
-                if self.data.tables["epochs"].values is not None:
+                if self.data.tables["epochs"].has_data:
                     proj_file.write(
                         "{val}\t".format(val=self.data.tables["epochs"].values[idx][0])
                     )
@@ -59,7 +59,7 @@ class ProjWriter(Writer):
                 proj_file.write("#  ")
 
                 # write velocities if they are present
-                if self.data.tables["velocities"].values is not None:
+                if self.data.tables["velocities"].has_data:
                     for col_idx in range(self.data.tables["velocities"].num_cols):
                         proj_file.write(
                             "{val}\t".format(
@@ -68,7 +68,7 @@ class ProjWriter(Writer):
                         )
 
                 # write additional values if they are present
-                if self.data.tables["values"].num_cols is not None:
+                if self.data.tables["values"].has_data:
                     for col_idx in range(self.data.tables["values"].num_cols):
                         proj_file.write(
                             "{val}\t".format(

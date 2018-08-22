@@ -15,6 +15,7 @@ from typing import Union
 
 # Posetta imports
 from posetta import data
+from posetta.lib import exceptions
 
 
 class Writer:
@@ -55,7 +56,10 @@ class Writer:
         Subclasses should typically implement (at least) the `write_data`-method.
         """
         self.setup_writer()
-        self.write_data()
+        if self.data.num_obs:
+            self.write_data()
+        else:
+            raise exceptions.WriterError("Input dataset is empty")
 
     def write_data(self) -> None:
         """Write data to the data file

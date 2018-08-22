@@ -128,18 +128,18 @@ class KmsReader(Reader):
         cset = data.CoordSet()
         # add coordinates
         if all(v is not None for v in self.data["easting"]):
-            cset.add("positions", 0, self.data["easting"], "easting")
+            cset.add("positions", self.data["easting"], 0, "easting")
         if all(v is not None for v in self.data["northing"]):
-            cset.add("positions", 1, self.data["northing"], "northing")
+            cset.add("positions", self.data["northing"], 1, "northing")
         if all(v is not None for v in self.data["elevation"]):
-            cset.add("positions", 2, self.data["elevation"], "elevation")
+            cset.add("positions", self.data["elevation"], 2, "elevation")
 
         # add whatever metadata is available
         if all(v is not None for v in self.data["station"]):
-            cset.add("values", None, self.data["station"], "station")
+            cset.add("values", self.data["station"], None, "station")
         if all(v is not None for v in self.data["minilabel"]):
-            cset.add("values", None, self.data["minilabel"], "minilabel")
+            cset.add("values", self.data["minilabel"], None, "minilabel")
         if all(v is not None for v in self.data["comment"]):
-            cset.add("values", None, self.data["comment"], "comment")
+            cset.add("values", self.data["comment"], None, "comment")
 
         return cset

@@ -20,10 +20,10 @@ format:
 
 # Run tests
 test:
-	pytest --cov=posetta
+	pytest --cov=posetta --cov-report=term-missing
 
 typing:
-	mypy --ignore-missing-imports posetta
+	mypy --ignore-missing-imports --disallow-untyped-defs --disallow-untyped-calls posetta
 
 # Create documentation
 doc:

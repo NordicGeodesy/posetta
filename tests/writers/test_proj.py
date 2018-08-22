@@ -38,19 +38,19 @@ def test_proj_writer():
     Test some things
     """
     cset = CoordSet()
-    cset.add("positions", 0, (687071.44,), "easting")
-    cset.add("positions", 1, (6210141.33,), "northing")
-    cset.add("positions", 2, (10,), "elevation")
+    cset.add("positions", (687071.44,), 0, "easting")
+    cset.add("positions", (6210141.33,), 1, "northing")
+    cset.add("positions", (10,), 2, "elevation")
 
     xyz_string = _write_and_read_file_as_string(cset)
     assert XYZ_OUTPUT == xyz_string
 
-    cset.add("epochs", 0, (2018.75,), "elevation")
+    cset.add("epochs", (2018.75,), 0, "elevation")
     xyzt_string = _write_and_read_file_as_string(cset)
     assert XYZT_OUTPUT == xyzt_string
 
-    cset.add("values", None, ("testing",), "comment1")
-    cset.add("values", None, ("TESTING",), "comment2")
+    cset.add("values", ("testing",), None, "comment1")
+    cset.add("values", ("TESTING",), None, "comment2")
     comment_string = _write_and_read_file_as_string(cset)
     assert COMMENT_OUTPUT == comment_string
 

@@ -10,7 +10,7 @@ different coordinate data formats.
 
 # Standard library imports
 from collections import namedtuple
-from typing import Any, Dict, List, Optional, Tuple
+from typing import cast, Dict, List, Optional
 
 # Third party imports
 import numpy as np
@@ -45,7 +45,7 @@ class CoordSet:
     def __init__(self) -> None:
         """Set up tables for the CoordSet
         """
-        self.num_obs: Optional[int] = None
+        self.num_obs = 0
         self.meta = coordset_meta.CoordSetMeta()
         self.columns: Dict[str, ColumnSpec] = dict()
         self.tables = {t.name: Table(t.num_cols) for t in _TABLES}
@@ -53,13 +53,17 @@ class CoordSet:
             setattr(self, table_name, table)
 
     def add(
-        self, table_name: str, idx: Optional[int], val: np.ndarray, column_name: str
+        self,
+        table_name: str,
+        val: np.ndarray,
+        idx: Optional[int] = None,
+        column_name: str = "",
     ) -> None:
         """Add one column of values to the CoordSet
 
         Possible tables are:
 
-            epochs(1), positions(3), (3)velocities(3) and values(None).
+            epochs(1), positions(3), velocities(3) and values(None).
 
         where the number of available columns is listed in the parentheses.
 
@@ -69,7 +73,7 @@ class CoordSet:
         """
         # Check that number of observations are consistent
         val_num_obs = len(val)
-        if self.num_obs is None:
+        if not self.columns:
             self.num_obs = val_num_obs
         elif val_num_obs != self.num_obs:
             raise exceptions.CoordSetError(
@@ -78,7 +82,7 @@ class CoordSet:
             )
 
         # Add value to table at specified index
-        idx = self.tables[table_name].add_column(column_name, idx, val)
+        idx = self.tables[table_name].add_column(column_name, val, idx)
 
         # Update meta information
         self.columns[column_name] = ColumnSpec(table_name, idx)
@@ -109,24 +113,29 @@ class Table:
     """Table with columns used in CoordSet
     """
 
-    def __init__(self, num_cols: Optional[int]) -> None:
+    def __init__(self, num_cols: Optional[int] = None) -> None:
         """Prepare one table
         """
-        self._is_expandable: bool = num_cols is None
-        self.num_cols: int = num_cols or 0
-        self.values: Optional[np.ndarray] = None
-        self.col_names: List[str] = [""] * self.num_cols
+        self._is_expandable = num_cols is None
+        self.num_cols = num_cols or 0
+        self.values = np.full((0, self.num_cols), np.nan)
+        self.col_names = [""] * self.num_cols
 
-    def add_column(self, name: str, idx: Optional[int], val: np.ndarray) -> int:
+    @property
+    def has_data(self) -> bool:
+        """Has any data been added to the table?
+        """
+        return self.values.size > 0
+
+    def add_column(self, name: str, val: np.ndarray, idx: Optional[int] = None) -> int:
         """Add one column of values to the Table
         """
-        val_num_obs = len(val)
-
         if type(val) is not np.ndarray:
             val = np.asarray(val)
 
         # Create new array to hold values if necessary
-        if self.values is None:
+        val_num_obs = len(val)
+        if not self.has_data:
             self.values = np.full((val_num_obs, self.num_cols), np.nan)
 
         # Add value to table at specified index

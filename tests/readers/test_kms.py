@@ -7,7 +7,6 @@ import pathlib
 import pytest
 
 # Posetta imports
-from posetta.lib import exceptions, plugins
 from posetta.readers.kms import KmsReader
 
 DIR = pathlib.Path.cwd() / "example_files" / "kms"
