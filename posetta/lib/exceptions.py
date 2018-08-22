@@ -23,6 +23,8 @@ class NoReaderFound(PosettaException):
 class ReaderError(PosettaException):
     pass
 
+class WriterError(PosettaException):
+    pass
 
 class UnknownPackageError(PosettaException):
     pass
