@@ -16,8 +16,10 @@ from collections import namedtuple as _namedtuple
 # This is automatically set using the bumpversion script
 __version__ = "0.0.1"
 
+
 # Start of development
 _birthday = _date(2018, 4, 20)
+
 
 # Maintainers of Posetta
 _Author = _namedtuple("_Author", ["name", "email", "start", "end"])
@@ -29,6 +31,7 @@ _AUTHORS = [
 __author__ = ", ".join(a.name for a in _AUTHORS if a.start < _date.today() < a.end)
 __contact__ = ", ".join(a.email for a in _AUTHORS if a.start < _date.today() < a.end)
 __url__ = "https://github.com/NordicGeodesy/posetta"
+
 
 # Copyleft of the library
 __copyright__ = f"{_birthday.year} - {_date.today().year} Nordic Geodetic Commision"

@@ -26,54 +26,54 @@ class ProjWriter(Writer):
         """Write data to a text file in 'x y z t # comment' format.
         """
 
-        # check that dataset has the required columns
-        required_columns = {"easting": False, "northing": False}
-        for column in self.data.columns:
-            # print(column.table, column.idx)
-            if column in ("easting", "northing"):
-                required_columns[column] = True
+        # TODO: We can't do tests based on column names unless we standardize them
+        # # check that dataset has the required columns
+        # required_columns = {"easting": False, "northing": False}
+        # for column in self.data.columns:
+        #     # print(column.table, column.idx)
+        #     if column in ("easting", "northing"):
+        #         required_columns[column] = True
 
-        if not (all(value is True for value in required_columns.values())):
-            raise exceptions.WriterError(
-                "Input dataset should at least contain eating and northing columns"
-            )
+        # if not (all(value is True for value in required_columns.values())):
+        #     raise exceptions.WriterError(
+        #         "Input dataset should at least contain eating and northing columns"
+        #     )
 
-        with open(self.file_path, "w") as proj_file:
-            for idx in range(self.data.num_obs):
-                # assume that position data is ordered as easting, northing, elevation
-                # (otherwise a PROJ axisswap operation can fix that).
-                for col_idx in range(self.data.tables["positions"].num_cols):
-                    proj_file.write(
+        for idx in range(self.data.num_obs):
+            # assume that position data is ordered as easting, northing, elevation
+            # (otherwise a PROJ axisswap operation can fix that).
+            for col_idx in range(self.data.tables["positions"].num_cols):
+                self.output_stream.write(
+                    "{val}\t".format(
+                        val=self.data.tables["positions"].values[idx][col_idx]
+                    )
+                )
+
+            # write epochs if they are present
+            if self.data.tables["epochs"].has_data:
+                self.output_stream.write(
+                    "{val}\t".format(val=self.data.tables["epochs"].values[idx][0])
+                )
+
+            # everything from here is considered a comment by PROJ
+            self.output_stream.write("#  ")
+
+            # write velocities if they are present
+            if self.data.tables["velocities"].has_data:
+                for col_idx in range(self.data.tables["velocities"].num_cols):
+                    self.output_stream.write(
                         "{val}\t".format(
-                            val=self.data.tables["positions"].values[idx][col_idx]
+                            val=self.data.tables["velocities"].values[idx][col_idx]
                         )
                     )
 
-                # write epochs if they are present
-                if self.data.tables["epochs"].has_data:
-                    proj_file.write(
-                        "{val}\t".format(val=self.data.tables["epochs"].values[idx][0])
+            # write additional values if they are present
+            if self.data.tables["values"].has_data:
+                for col_idx in range(self.data.tables["values"].num_cols):
+                    self.output_stream.write(
+                        "{val}\t".format(
+                            val=self.data.tables["values"].values[idx][col_idx]
+                        )
                     )
 
-                # everything from here is considered a comment by PROJ
-                proj_file.write("#  ")
-
-                # write velocities if they are present
-                if self.data.tables["velocities"].has_data:
-                    for col_idx in range(self.data.tables["velocities"].num_cols):
-                        proj_file.write(
-                            "{val}\t".format(
-                                val=self.data.tables["velocities"].values[idx][col_idx]
-                            )
-                        )
-
-                # write additional values if they are present
-                if self.data.tables["values"].has_data:
-                    for col_idx in range(self.data.tables["values"].num_cols):
-                        proj_file.write(
-                            "{val}\t".format(
-                                val=self.data.tables["values"].values[idx][col_idx]
-                            )
-                        )
-
-                proj_file.write("\n")
+            self.output_stream.write("\n")

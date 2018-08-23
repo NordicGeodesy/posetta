@@ -31,6 +31,9 @@ TODO
 
 """
 
+# Standard library imports
+import codecs
+
 # Posetta imports
 from posetta.lib import plugins
 from posetta.writers._writer import Writer
@@ -43,5 +46,7 @@ class CsvWriter(Writer):
 
     def write_data(self) -> None:
         """Write data to a CSV file
+
+        Use pandas to do the work
         """
-        self.data.as_dataframe().to_csv(self.file_path)
+        self.data.as_dataframe().to_csv(self.output_stream)

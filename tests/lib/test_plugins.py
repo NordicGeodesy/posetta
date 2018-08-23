@@ -2,6 +2,9 @@
 
 """
 
+# Standard library imports
+import sys
+
 # Third party imports
 import pytest
 
@@ -11,6 +14,18 @@ from posetta.lib import plugins
 from posetta.readers._reader import Reader
 
 
+@pytest.fixture
+def tmpfile(tmpdir):
+    """A temporary file that can be read"""
+    file_path = tmpdir.join("test")
+    file_path.write("Temporary test file")
+
+    return file_path
+
+
+#
+# Tests
+#
 def test_package_not_empty():
     """Test that list_all() finds some plugins in posetta.readers-package"""
     readers = plugins.list_all("posetta.readers")
@@ -46,11 +61,12 @@ def test_plugin_exists_not(plugin_name):
     assert not plugins.exists("posetta.lib", plugin_name)
 
 
-def test_call_existing_plugin():
+def test_call_existing_plugin(tmpfile):
     """Test that calling a reader-plugin returns a Reader instance"""
     package_name = "posetta.readers"
     plugin_name = plugins.list_all(package_name)[0]
-    reader = plugins.call(package_name, plugin_name, file_path="test")
+    with open(tmpfile, mode="rb") as input_stream:
+        reader = plugins.call(package_name, plugin_name, input_stream=input_stream)
     assert isinstance(reader, Reader)
 
 
