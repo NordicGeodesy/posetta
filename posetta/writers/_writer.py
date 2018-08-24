@@ -8,8 +8,8 @@ in Posetta.
 """
 
 # Standard library imports
-import pathlib
-from typing import Union
+import codecs
+from typing import IO
 
 # Third party imports
 
@@ -25,25 +25,37 @@ class Writer:
     the specific writers like for instance ChainWriter, LineWriter, SinexWriter etc
 
     Attributes:
-        file_path: Union[str, pathlib.Path] - Path to the datafile that will be written.
-        writer_name: str                    - Name of the writer (module).
+        output_stream: IO[str]    - Stream that output is written to.
+        data: data.CoordSet       - The coordinate data to be written.
+        writer_name: str          - Name of the writer (module).
+        file_path: str            - Name of the datafile that will be written.
+        encoding: str             - Encoding of output file.
     """
 
     def __init__(
-        self, file_path: Union[str, pathlib.Path], cset: data.CoordSet
+        self, output_stream: IO[bytes], cset: data.CoordSet, encoding: str = "utf-8"
     ) -> None:
         """Set up the basic information needed by the writer
 
         Args:
-            file_path:    Path to file that will be written.
-            cset:         Data that will be written
+            output_stream:  Byte stream to write to.
+            cset:           Data that will be written.
+            encoding:       Encoding used when writing data.
         """
-        self.file_path = pathlib.Path(file_path)
+        self.output_stream = codecs.getwriter(encoding)(output_stream)
         self.data = cset
+        self.encoding = encoding
         self.writer_name = self.__module__.split(".")[-1]
+
+        try:
+            self.file_path = output_stream.name
+        except AttributeError:
+            self.file_path = "<unknown>"
 
     def setup_writer(self) -> None:
         """Set up a writer so that it can write data to a file.
+
+        This method may be overwritten if a writer needs to do some preparatory work.
         """
         pass
 

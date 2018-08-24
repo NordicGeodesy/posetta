@@ -23,7 +23,7 @@ test:
 	pytest --cov=posetta --cov-report=term-missing
 
 typing:
-	mypy --ignore-missing-imports --disallow-untyped-defs --disallow-untyped-calls posetta
+	mypy --ignore-missing-imports --disallow-untyped-defs --disallow-untyped-calls --no-implicit-optional posetta
 
 # Create documentation
 doc:

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Posetta, The Universal Translator of Geodetic Coordinate File Formats
 
-Posetta can convert an input file in one format to an output file with a
-different format.
+Posetta can convert input in one format to output with a different
+format. Input and output can be either files, or stdin and stdout streams.
 
 \b
 Examples:
@@ -10,7 +10,7 @@ Examples:
 
 Convert file_1.txt in XYZ-format to file_2.gri in GRI-format:
 
-  $ posetta file_1.txt -f xyz file_2.gri -t gri
+  $ posetta -f file_1.txt -F xyz -t file_2.gri -T gri
 
 \b
 Input Formats:
@@ -38,10 +38,12 @@ Currently maintained by:
 {maintainers}
 
 Contributions are welcome at {url}.
+
 """
 
 # Standard library imports
 import pathlib
+import sys
 from typing import Any, Dict, Optional, Union
 
 # Third party imports
@@ -76,13 +78,13 @@ def help_str() -> str:
 # Starting Point of Command Line Tool
 #
 @click.command(help=help_str())
-@click.argument("file_from")
-@click.argument("file_to")
+@click.option("-f", "--file_from", help="Path of input file. Default is stdin.")
+@click.option("-t", "--file_to", help="Path of output file. Default is stdout.")
 @click.option(
-    "-f", "--fmt_from", help="Format of input file (supported formats listed above)."
+    "-F", "--fmt_from", help="Input file format (supported formats listed above)."
 )
 @click.option(
-    "-t", "--fmt_to", help="Format of output file (supported formats listed above)."
+    "-T", "--fmt_to", help="Output file format (supported formats listed above)."
 )
 @click.option(
     "-O", "--overwrite", is_flag=True, help="Overwrite if output file already exists."
@@ -131,14 +133,14 @@ def translate(
     """
     options = options or dict()
     verbose = _verbose_on if options.get("verbose") else _verbose_off
-    path_from = pathlib.Path(file_from)
-    path_to = pathlib.Path(file_to)
+    path_from = None if file_from is None else pathlib.Path(file_from)
+    path_to = None if file_to is None else pathlib.Path(file_to)
 
     # Check input parameters
-    if not path_from.exists():
+    if path_from is not None and not path_from.exists():
         raise click.BadParameter(f"Input file '{path_from}' does not exist")
 
-    if path_to.exists() and not options.get("overwrite") is True:
+    if path_to is not None and path_to.exists() and not options.get("overwrite"):
         raise click.BadParameter(
             f"Output file '{path_to}' already exists. Use --overwrite to overwrite it."
         )
@@ -155,12 +157,21 @@ def translate(
             f"Output format '{fmt_to}' is not supported. Use one of {fmts}"
         )
 
-    # Do the translation
-    verbose(f"Reading from '{path_from}'")
-    cset = readers.read(path_from, fmt_from).as_coordset()
+    # Read input as CoordSet
+    if path_from is None:
+        verbose("Reading from standard input")
+        cset = readers.read_stream(sys.stdin.buffer, fmt_from).as_coordset()
+    else:
+        verbose(f"Reading from '{path_from}'")
+        cset = readers.read_file(path_from, fmt_from).as_coordset()
 
-    verbose(f"Writing to '{path_to}'")
-    writers.write(path_to, fmt_to, cset)
+    # Write CoordSet to new format
+    if path_to is None:
+        verbose("Writing to standard output")
+        writers.write_stream(sys.stdout.buffer, fmt_to, cset)
+    else:
+        verbose(f"Writing to '{path_to}'")
+        writers.write_file(path_to, fmt_to, cset)
 
 
 #
