@@ -106,7 +106,10 @@ def cli(
 # Starting Point for the Graphical (GUI) Tool
 #
 def gui() -> None:
-    ...
+    from posetta.gui import PosettaGui  # Local import to avoid slowing down command line tool
+
+    root = PosettaGui(translate)
+    root.mainloop()
 
 
 #
