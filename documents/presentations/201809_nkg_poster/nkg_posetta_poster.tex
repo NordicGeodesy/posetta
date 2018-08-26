@@ -1,0 +1,185 @@
+\documentclass{beamer}
+
+% Size of poster
+\usepackage[size=a0,orientation=portrait]{beamerposter}
+
+% Theme and color  https://hartwork.org/beamer-theme-matrix/
+\usetheme{Berlin}
+\usecolortheme{beaver}
+
+% Packages
+\usepackage{lipsum}      % Use for dummy text, for instance \lipsum[1-4] prints 4 paragraphs
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{tabularx}
+%\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+%\usepackage{amsmath,amsthm, amssymb, latexsym}
+%\boldmath
+
+% Environment with extra margins  https://tex.stackexchange.com/a/108495
+\newenvironment<>{Block}[1]{%
+ \begin{actionenv}#2%
+ \def\insertblocktitle{\leftskip=10pt\rightskip=10pt\vspace*{-3pt} #1\vspace{10pt}}%
+ \par%
+ \usebeamertemplate{block begin}\leftskip=10pt\rightskip=10pt\vspace{10pt}}
+ {\par\vspace{10pt}\usebeamertemplate{block end}
+ \end{actionenv}}
+
+\addtobeamertemplate{block begin}{}{\setlength{\parskip}{20pt plus 1pt minus 1pt}}
+\setbeamertemplate{caption}[numbered]
+
+% Bibliography colors and labels
+\setbeamertemplate{bibliography item}{\color{black}\insertbiblabel}
+\setbeamercolor{bibliography entry item}{fg=black}
+\setbeamercolor{bibliography entry author}{fg=black}
+\setbeamercolor{bibliography entry title}{fg=black} 
+\setbeamercolor{bibliography entry location}{fg=black} 
+\setbeamercolor{bibliography entry note}{fg=black}
+
+\usebackgroundtemplate{\includegraphics[width=\paperwidth]{figure/header}}
+
+\begin{document}
+\begin{frame}[t]
+  % Top Header is on background
+  \vspace*{20cm}
+
+  % Line with author information
+  \begin{columns}
+    \begin{column}[t]{.10\textwidth} %spacer
+    \end{column}
+    \begin{column}[t]{.35\textwidth}
+      {\begin{flushright}
+          \fontsize{42}{48}\selectfont Geir Arne Hjelle\\
+          \fontsize{24}{24}\selectfont \texttt{geir.arne.hjelle@kartverket.no}\\
+          \fontsize{24}{24}\selectfont {\itshape Norwegian Mapping Authority}
+      \end{flushright}}
+    \end{column}
+    \begin{column}[t]{.35\textwidth}
+      {\begin{flushleft}
+          \fontsize{42}{48}\selectfont Kristian Evers\\
+          \fontsize{24}{24}\selectfont \texttt{kreve@sdfe.dk}\\
+          \fontsize{24}{24}\selectfont {\itshape Danish Agency for Data Supply and Efficiency}
+      \end{flushleft}}
+    \end{column}
+    \begin{column}[t]{.10\textwidth} %spacer
+    \end{column}
+  \end{columns}
+
+  \vspace*{2cm}
+
+  % Content area
+
+  \begin{columns}
+    \begin{column}[t]{.98\textwidth}
+      \begin{Block}{Background}
+        \begin{multicols}{4}
+          \input{background}
+        \end{multicols}
+      \end{Block}
+    \end{column}
+  \end{columns}
+
+  \vspace*{2cm}     % Some space before Figures
+
+  % Figure strip
+  \begin{columns}
+    \begin{column}[b]{.24\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figure/coordset}
+        \caption{The \texttt{CoordSet} is the internal representation of coordinates}
+        \label{fig:coordset}
+      \end{figure}
+    \end{column}
+
+    \begin{column}[b]{.24\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figure/posetta_cli}
+        \caption{Using Posetta as a command line program}
+        \label{fig:cli}
+      \end{figure}
+    \end{column}
+
+    \begin{column}[b]{.24\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figure/posetta_gui}
+        \caption{The graphical user interface of Posetta}
+        \label{fig:gui}
+      \end{figure}
+    \end{column}
+
+    \begin{column}[b]{.24\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figure/posetta_github}
+        \caption{You can download or contribute to Posetta at Github}
+        \label{fig:github}
+      \end{figure}
+    \end{column}
+  \end{columns}
+
+  \vspace*{2cm}
+
+  \begin{columns}
+    \begin{column}[t]{.98\textwidth}
+      \begin{Block}{Technology}
+        \begin{multicols}{4}
+          \input{technology}
+        \end{multicols}
+      \end{Block}
+    \end{column}
+  \end{columns}
+
+  \vspace*{2cm}
+
+  \begin{columns}
+    \begin{column}[t]{.48\textwidth}
+      \begin{Block}{Input and Output Formats}
+        \input{formats}
+      \end{Block}
+    \end{column}
+    
+    % Demo box, about A3 size
+    \begin{column}[t]{.48\textwidth}
+      \begin{Block}{Demo\phantom{p}}  % Phantom to get correct spacing with a basement letter
+        %\vspace*{25cm}
+        \input{demo}
+      \end{Block}
+    \end{column}
+  \end{columns}
+    
+  \vspace*{2cm}     % Some space between Text blocks
+
+  % References box
+  \vspace*{1cm}
+  \begin{columns}
+    \begin{column}[t]{.48\textwidth}
+      \begin{Block}{GitHub as a Development Platform}
+        \begin{multicols}{2}
+          \input{contributing}
+        \end{multicols}
+      \end{Block}
+    \end{column}
+
+    \begin{column}[t]{.48\textwidth}
+      \begin{Block}{References}
+%        \vspace*{-1cm}                   % Too much space on top inside block
+        \begin{minipage}{.98\textwidth}  % Add space left and right
+          \begin{multicols}{2}
+            \input{references}
+          \end{multicols}
+        \end{minipage}
+      \end{Block}
+    \end{column}
+  \end{columns}
+
+  \vspace*{2cm}
+  
+  \begin{center}
+    \Huge \texttt{github.com/nordicgeodesy/posetta}
+  \end{center}
+      
+\end{frame}
+\end{document}
