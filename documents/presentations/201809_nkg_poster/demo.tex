@@ -14,14 +14,14 @@ Options \texttt{-f}, \texttt{-F} are used to specify which file and format to co
   $ posetta -f example.xyz -F xyz -t example.csv -T csv
 \end{verbatim}
 
-\textbf{Combine with Proj to transform coordinates in a SOSI file}
+\textbf{Combine with PROJ to transform coordinates in a CSV file}
 
-If no input or output file is specified, Posetta will read from \texttt{stdin} or write to \texttt{stdout} respectively. Posetta can therefore be combined with other programs in a pipeline. The following uses Proj (\texttt{cct}) to transform from UTM32 coordinates to longitude and latitude.
+If no input or output file is specified, Posetta will read from \texttt{stdin} or write to \texttt{stdout} respectively. Posetta can therefore be combined with other programs in a pipeline. The following uses PROJ (\texttt{cct})~\cite{proj} to transform from UTM32 coordinates to longitude and latitude.
 
 \begin{verbatim}
-  $ posetta -f utm32.sosi -F sosi -T proj \
+  $ posetta -f utm32.csv -F csv -T proj \
       | cct +proj=utm +zone=32 +ellps=GRS80 \
-      | posetta -F proj -t longlat.sosi -T sosi
+      | posetta -F proj -t longlat.csv -T csv
 \end{verbatim}
 
 \endinput
