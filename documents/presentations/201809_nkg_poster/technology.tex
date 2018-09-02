@@ -1,0 +1,17 @@
+Posetta is written in Python. It is supported on Windows, MacOS, and Linux running Python 3.6 or later. Posetta can be used either as a command line program (see Figure~\ref{fig:cli}) or through a graphical user interface (see Figure~\ref{fig:gui}).
+
+\columnbreak
+Posetta has a fairly simple architecture, built around something we call a \texttt{CoordSet}. The \texttt{CoordSet} is a class that represents a set of coordinates, either as a list of points or as a grid (see Figure~\ref{fig:coordset}. The \texttt{CoordSet} consists of tables with information about the position, velocity, epoch, measurement values, and other metadata for each point.
+
+Furthermore:
+
+\begin{itemize}
+\item Posetta has \textbf{readers}. Each reader can read one format and convert it to a \texttt{CoordSet}.
+\item Posetta has \textbf{writers}. Each writer can convert a \texttt{CoordSet} to a format and write it to file.
+\end{itemize}
+
+Using these readers and writers, we can convert from any supported input format to any supported output format.
+
+The \texttt{CoordSet} can also easily be converted to \texttt{numpy} arrays~\cite{oliphant2006} or \texttt{pandas} dataframes~\cite{mckinney2010}. This means that you can also take advantage of Posetta's readers and writers inside your own Python programs.
+
+\endinput
